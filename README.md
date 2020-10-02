@@ -13,7 +13,7 @@ A K8s cluster with longhorn ready.
 
 ### Installing
 
-Create env and a secret files for your admin password.
+Create both env and secret files for your admin password.
 
 ```bash
 # Create the env file
@@ -21,6 +21,7 @@ cat <<< 'LDAP_ORGANISATION="EXAMPLE"
 LDAP_DOMAIN=example.com' > env
 kubectl create configmap openldap --from-env-file=env
 
+# Create the secret file
 cat <<< 'LDAP_ADMIN_PASSWORD=DFSe34csPs54519x' > secret
 kubectl create secret generic openldap --from-env-file=./secret
 ```
@@ -32,7 +33,7 @@ kubectl apply -f pvc.yml
 # ...
 ```
 
-The objects are voluntarily separated into several files.
+These objects are voluntarily separated into several files.<br/>
 The service is a NodePort by the way.
 
 ### Try it
