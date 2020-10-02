@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: openldap
+  name: openldap
+spec:
+  type: "NodePort"
+  ports:
+  - name: "port-80"
+    port: 80
+    protocol: TCP
+    targetPort: 80
+    nodePort: 31080
+  - name: "port-689"
+    port: 689
+    protocol: TCP
+    targetPort: 689
+    nodePort: 31689
+  - name: "port-389"
+    port: 389
+    protocol: TCP
+    targetPort: 389
+    nodePort: 31389
+  selector:
+    app: openldap
+status:
+  loadBalancer: {}

@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: openldap
+  name: openldap
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openldap
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: openldap
+    spec:
+      containers:
+      - image: osixia/openldap:1.4.0-amd64
+        name: openldap
+        envFrom:
+        - configMapRef:
+            name: openldap
+        - secretRef:
+            name: openldap
+        ports:
+        - name: "port-389"
+          containerPort: 389
+        - name: "port-689"
+          containerPort: 689
+        volumeMounts:
+        - name: openldap-pvc-data
+          mountPath: "/var/lib/ldap"
+        - name: openldap-pvc-etc
+          mountPath: "/etc/ldap/slapd.d"
+        resources: {}
+      - image: osixia/phpldapadmin:0.9.0-amd64
+        name: phpldapadmin
+        env:
+        - name: PHPLDAPADMIN_LDAP_HOSTS
+          value: openldap
+        - name: PHPLDAPADMIN_HTTPS
+          value: "false"
+        ports:
+        - name: "port-80"
+          containerPort: 80
+      volumes:
+      - name: openldap-pvc-data
+        persistentVolumeClaim:
+          claimName: longhorn-openldap-pvc-data
+      - name: openldap-pvc-etc
+        persistentVolumeClaim:
+          claimName: longhorn-openldap-pvc-etc
+status: {}
